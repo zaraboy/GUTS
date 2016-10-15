@@ -32,7 +32,7 @@ var forcePlatformFalse = false;
 
 
 function between(a,min,max){
-	return ((a >= min) && (a <= max));
+    return ((a >= min) && (a <= max));
 }
 
 function startGame() {
@@ -61,22 +61,22 @@ var myGameArea = {
 
 /*
 function sprite (options) {
-				
+                
     
     var that = {},
         frameIndex = 0,
         tickCount = 0,
         ticksPerFrame = ticksPerFrame || 100,
         numberOfFrames = options.numberOfFrames || 10;
-					
+                    
     that.context = options.context;
     that.width = options.width;
     that.height = options.height;
     that.image = options.image;
 
     that.render = function () {
-    	// Clear the canvas
-		ctx.clearRect(0, 0, that.width, that.height);
+        // Clear the canvas
+        ctx.clearRect(0, 0, that.width, that.height);
         // Draw the animation
         that.context.drawImage(
            that.image,
@@ -96,13 +96,13 @@ function sprite (options) {
     that.update = function () {
 
         tickCount += 1;
-			
+            
         if (tickCount > ticksPerFrame) {
         
-        	tickCount = 0;
-        	
+            tickCount = 0;
+            
             // If the current frame index is in range
-            if (frameIndex < numberOfFrames - 1) {	
+            if (frameIndex < numberOfFrames - 1) {  
                 // Go to the next frame
                 frameIndex += 1;
             } else  {
@@ -117,10 +117,10 @@ function sprite (options) {
 
 function gameLoop () {
 
-	window.requestAnimationFrame(gameLoop);
+    window.requestAnimationFrame(gameLoop);
 
-	coin.update();
-	coin.render();
+    coin.update();
+    coin.render();
 }
 
 */
@@ -147,32 +147,32 @@ function component(width, height, color, x, y, type) {
             ctx.fillStyle = color;
             ctx.fillText(this.text, this.x, this.y);
         } else if(this.type == "hero") {
-        	var run = new Image();
-			run.src = "run.png";
-			var norun = new Image();
-			norun.src = "norun.png";
-			
-			/*coinImage.addEventListener("load", gameLoop);
+            var run = new Image();
+            run.src = "run.png";
+            var norun = new Image();
+            norun.src = "norun.png";
+            
+            /*coinImage.addEventListener("load", gameLoop);
 
-			
-			var canvas = myGameArea.canvas;
-			coin.context= canvas.getContext("2d");
-			coin.width= 46;
-			coin.height= 46;
-			coin.image= coinImage;
-			//
-			*/
-			//coin.render();
-			//
+            
+            var canvas = myGameArea.canvas;
+            coin.context= canvas.getContext("2d");
+            coin.width= 46;
+            coin.height= 46;
+            coin.image= coinImage;
+            //
+            */
+            //coin.render();
+            //
             ctx.fillStyle = color;
             if(counter == 10){
-            	running = !running;
-            	if(running){
-            		pic = run;
-            	} else{
-            		pic = norun;
-            	}
-            	counter = 0;
+                running = !running;
+                if(running){
+                    pic = run;
+                } else{
+                    pic = norun;
+                }
+                counter = 0;
             }
             ctx.drawImage(pic,this.x, this.y);
             counter ++;
@@ -180,27 +180,27 @@ function component(width, height, color, x, y, type) {
             //console.log(myGameArea.frameNo);
             //ctx.fillRect(this.x, this.y, this.width, this.height);
         } else {
-        	ctx.fillStyle = color;
-        	ctx.fillRect(this.x, this.y, this.width, this.height);
+            ctx.fillStyle = color;
+            ctx.fillRect(this.x, this.y, this.width, this.height);
         }
 
     }
     this.newPos = function() {
-    	if(onPlatform == false && forcePlatformFalse == false && this.gravity == 0){
-    		this.gravity = 2;
-    	}
-    	//console.log("Gravity is: " + myGamePiece.gravity);
+        if(onPlatform == false && forcePlatformFalse == false && this.gravity == 0){
+            this.gravity = 2;
+        }
+        //console.log("Gravity is: " + myGamePiece.gravity);
         this.gravitySpeed = this.gravity;
         this.x += this.speedX;
         this.y += this.speedY + this.gravitySpeed;
         this.hitBottom();
     }
     this.onPlatform = function() {
-    	//console.log(onPlatform);
-    	onPlatform = true;
-       	//this.gravitySpeed = 0;
-       	this.gravity = 0;
-       	//this.gravity = 0.01;
+        //console.log(onPlatform);
+        onPlatform = true;
+        //this.gravitySpeed = 0;
+        this.gravity = 0;
+        //this.gravity = 0.01;
         this.x += this.speedX;
         //onPlatform = false;
         //this.hitBottom();
@@ -210,8 +210,8 @@ function component(width, height, color, x, y, type) {
 
     }
     this.noLongerOnPlatform = function(){
-    	onPlatform = false;
-    	this.gravitySpeed = 2;
+        onPlatform = false;
+        this.gravitySpeed = 2;
     }
     this.hitBottom = function() {
         var rockbottom = myGameArea.canvas.height - this.height;
@@ -308,14 +308,14 @@ function everyinterval(n) {
 }
 
 function accelerate(n) {
-	onPlatform = false;
-	forcePlatformFalse = true;
+    onPlatform = false;
+    forcePlatformFalse = true;
     myGamePiece.gravity = n;
 }
 function accelerate1(n) {
-	forcePlatformFalse = false;
-	onPlatform = false;
-   	myGamePiece.gravity = n;
+    forcePlatformFalse = false;
+    onPlatform = false;
+    myGamePiece.gravity = n;
 
 }
 
