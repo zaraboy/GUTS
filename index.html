@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-
+<script src="terrainGen.js"></script>
 <style>
 /*#cloud_demo_canvas {
     border: 5px solid black;
@@ -14,7 +14,7 @@
 
 </head>
 <body onload="startGame()">
-<img id="coin" src="coin.png"/>
+
 <script>
 
 var myGamePiece;
@@ -22,6 +22,7 @@ var myObstacles = [];
 var myScore;
 var onPlatform = false;
 var forcePlatformFalse = false;
+var firstTime = true;
 
 
 
@@ -50,7 +51,7 @@ var myGameArea = {
         this.context = this.canvas.getContext("2d");
         document.body.insertBefore(this.canvas, document.body.childNodes[0]);
         this.frameNo = 0;
-        this.interval = setInterval(updateGameArea, 20);
+        this.interval = setInterval(updateGameArea, 10);
         },
     clear : function() {
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
@@ -61,14 +62,14 @@ var myGameArea = {
 
 /*
 function sprite (options) {
-                
-    
+
+
     var that = {},
         frameIndex = 0,
         tickCount = 0,
         ticksPerFrame = ticksPerFrame || 100,
         numberOfFrames = options.numberOfFrames || 10;
-                    
+
     that.context = options.context;
     that.width = options.width;
     that.height = options.height;
@@ -88,7 +89,7 @@ function sprite (options) {
            0,
            that.width / numberOfFrames,
            that.height);
-    
+
     };
 
     that.loop = options.loop;
@@ -96,13 +97,13 @@ function sprite (options) {
     that.update = function () {
 
         tickCount += 1;
-            
+
         if (tickCount > ticksPerFrame) {
-        
+
             tickCount = 0;
-            
+
             // If the current frame index is in range
-            if (frameIndex < numberOfFrames - 1) {  
+            if (frameIndex < numberOfFrames - 1) {
                 // Go to the next frame
                 frameIndex += 1;
             } else  {
@@ -110,7 +111,7 @@ function sprite (options) {
 
             }
         }
-    }; 
+    };
 
     return that;
 }
@@ -148,13 +149,13 @@ function component(width, height, color, x, y, type) {
             ctx.fillText(this.text, this.x, this.y);
         } else if(this.type == "hero") {
             var run = new Image();
-            run.src = "run.png";
+            //run.src = "run.png";
             var norun = new Image();
-            norun.src = "norun.png";
-            
+            //norun.src = "norun.png";
+
             /*coinImage.addEventListener("load", gameLoop);
 
-            
+
             var canvas = myGameArea.canvas;
             coin.context= canvas.getContext("2d");
             coin.width= 46;
@@ -164,6 +165,7 @@ function component(width, height, color, x, y, type) {
             */
             //coin.render();
             //
+
             ctx.fillStyle = color;
             if(counter == 10){
                 running = !running;
@@ -174,14 +176,17 @@ function component(width, height, color, x, y, type) {
                 }
                 counter = 0;
             }
-            ctx.drawImage(pic,this.x, this.y);
+            //ctx.drawImage(pic,this.x, this.y);
             counter ++;
             //ctx.drawImage(run,this.x, this.y);
             //console.log(myGameArea.frameNo);
-            //ctx.fillRect(this.x, this.y, this.width, this.height);
-        } else {
-            ctx.fillStyle = color;
             ctx.fillRect(this.x, this.y, this.width, this.height);
+        } else {
+            var block = new Image();
+            block.src = "block5.png";
+            ctx.fillStyle = color;
+            //ctx.fillRect(this.x, this.y, this.width, this.height);
+            ctx.drawImage(block,this.x,this.y,this.width,50);
         }
 
     }
@@ -245,7 +250,7 @@ function component(width, height, color, x, y, type) {
             }
             crash = false;
             //this.noLongerOnPlatform();
-            console.log(onPlatform);
+            //console.log(onPlatform);
             //console.log("Not touching shit");
             //onPlatform = false;
            // onPlatform();
@@ -254,9 +259,9 @@ function component(width, height, color, x, y, type) {
             crash = false;
         }else if( between(Math.floor(mybottom),othertop-2,othertop+2) && ((myright >= otherleft && myright <= otherright) || (myleft >= otherleft && myleft <= otherright))  ){
             //console.log("My ass is on fire");
-            console.log(onPlatform);
+           // console.log(onPlatform);
             if(onPlatform == false && forcePlatformFalse == false){
-                this.onPlatform();              
+                this.onPlatform();
             }
             crash = false;
         }else{
@@ -273,7 +278,7 @@ function component(width, height, color, x, y, type) {
 
 
 function updateGameArea() {
-    var x, height, gap, minHeight, maxHeight, minGap, maxGap;
+    var x, height, gap, minHeight, maxHeight, minGap, maxGap, blockLength;
     for (i = 0; i < myObstacles.length; i += 1) {
         if (myGamePiece.crashWith(myObstacles[i])) {
             return;
@@ -281,8 +286,9 @@ function updateGameArea() {
     }
     myGameArea.clear();
     myGameArea.frameNo += 1;
-    if (myGameArea.frameNo == 1 || everyinterval(150)) {
+    if (myGameArea.frameNo == 1 || everyinterval(500)) {
         x = myGameArea.canvas.width;
+
         minHeight = 20;
         maxHeight = 200;
         height = Math.floor(Math.random()*(maxHeight-minHeight+1)+minHeight);
@@ -290,7 +296,27 @@ function updateGameArea() {
         maxGap = 200;
         gap = Math.floor(Math.random()*(maxGap-minGap+1)+minGap);
       //  myObstacles.push(new component(10, height, "green", x, 0));
-        myObstacles.push(new component(250, x - height - gap, "green", x, height + gap));
+        if(firstTime){
+          neshtosi = genFirstBlock();
+          firstBlockHeight = neshtosi.shift();
+          firstBlockLength = neshtosi.shift();
+          previousBlockHeight = firstBlockHeight;
+          previousBlockLength = firstBlockLength;
+          blockLength = firstBlockLength;
+          myObstacles.push(new component(firstBlockLength, firstBlockHeight, "green", x, height + gap));
+          firstTime = false;
+      //  console.log(blockHeight+"---"+blockLength);
+        } else {
+          neshtosi = genNextBlock(previousBlockHeight,previousBlockLength);
+          blockHeight = neshtosi.shift();
+          blockLength = neshtosi.shift();
+
+          myObstacles.push(new component(blockLength, blockHeight, "green", x, height + gap));
+          previousBlockHeight = blockHeight;
+          previousBlockLength = blockLength;
+        }
+        //alert(genFirstBlock());
+        //myObstacles.push(new component(250, x - height - gap, "green", x, height + gap));
     }
     for (i = 0; i < myObstacles.length; i += 1) {
         myObstacles[i].x += -1;
