@@ -4,76 +4,208 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <style>
 canvas {
-    border: 5px solid black;
-    background-color: pink;
+    border:1px solid #d3d3d3;
+    background-color: #f1f1f1;
 }
 </style>
 </head>
-<body>
-<canvas id="cloud_demo_canvas" width="1440" height="900">Alternative text if browser don't support canvas.</canvas>
-
-
+<body onload="startGame()">
 <script>
 
-// <---------- EXTRA CANVAS POWER -----------> //
-var canvas;
-var ctx;
- 
-var background;
-var width = 900;	
-var height = 1440;
- 
-var cloud;
-var cloud_x;
+var myGamePiece;
+var myObstacles = [];
+var myScore;
+var onPlatform = false;
+var forcePlatformFalse = false;
 
-
- 
-function init() {
-	canvas = document.getElementById("cloud_demo_canvas");
-	width = canvas.width;
-	height = canvas.height;
-	ctx = canvas.getContext("2d");
- 
-	// init background 
-	background = new Image();
-	background.src = 'http://www.hutui6.com/data/out/22/68383528-blind-wallpapers.jpg';
-
- 
-	// init cloud
-	cloud = new Image();
-	cloud.src = 'http://silveiraneto.net/wp-content/uploads/2011/06/cloud.png';
-	cloud.onload = function(){
-		cloud_x = width;
-	};
- 
-	return setInterval(main_loop, 0.1);
+function between(a,min,max){
+	return ((a >= min) && (a <= max));
 }
-function update(){
-	cloud_x -= 0.3;
-	if (cloud_x < -cloud.width ) {
-		cloud_x = width;
-	}
+
+function startGame() {
+    myGamePiece = new component(30, 30, "red", 10, 120);
+    myGamePiece.gravity = 0.05;
+    myScore = new component("30px", "Consolas", "black", 280, 40, "text");
+    myGameArea.start();
+}
+
+var myGameArea = {
+    canvas : document.createElement("canvas"),
+    start : function() {
+        this.canvas.width = 480;
+        this.canvas.height = 270;
+        this.context = this.canvas.getContext("2d");
+        document.body.insertBefore(this.canvas, document.body.childNodes[0]);
+        this.frameNo = 0;
+        this.interval = setInterval(updateGameArea, 20);
+        },
+    clear : function() {
+        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    }
+}
+
+
+
+
+function component(width, height, color, x, y, type) {
+    this.type = type;
+    this.score = 0;
+    this.width = width;
+    this.height = height;
+    this.speedX = 0;
+    this.speedY = 0;
+    this.x = x;
+    this.y = y;
+    this.gravity = 0;
+    this.gravitySpeed = 0;
+    this.update = function() {
+        ctx = myGameArea.context;
+        if (this.type == "text") {
+            ctx.font = this.width + " " + this.height;
+            ctx.fillStyle = color;
+            ctx.fillText(this.text, this.x, this.y);
+        } else {
+            ctx.fillStyle = color;
+            ctx.fillRect(this.x, this.y, this.width, this.height);
+        }
+    }
+    this.newPos = function() {
+    	if(onPlatform == false && forcePlatformFalse == false && this.gravity == 0){
+    		this.gravity = 2;
+    	}
+    	console.log("Gravity is: " + myGamePiece.gravity);
+        this.gravitySpeed = this.gravity;
+        this.x += this.speedX;
+        this.y += this.speedY + this.gravitySpeed;
+        this.hitBottom();
+    }
+    this.onPlatform = function() {
+    	console.log(onPlatform);
+    	onPlatform = true;
+       	//this.gravitySpeed = 0;
+       	this.gravity = 0;
+       	//this.gravity = 0.01;
+        this.x += this.speedX;
+        //onPlatform = false;
+        //this.hitBottom();
+//
+        this.newPos();
+
+
+    }
+    this.noLongerOnPlatform = function(){
+    	onPlatform = false;
+    	this.gravitySpeed = 2;
+    }
+    this.hitBottom = function() {
+        var rockbottom = myGameArea.canvas.height - this.height;
+        if (this.y > rockbottom) {
+            this.y = rockbottom;
+            this.gravitySpeed = 2;
+        }
+        this.gravitySpeed = 2;
+    }
+
+    this.crashWith = function(otherobj) {
+        var myleft = this.x;
+        var myright = this.x + (this.width);
+        var mytop = this.y;
+        var mybottom = this.y + (this.height);
+        var otherleft = otherobj.x;
+        var otherright = otherobj.x + (otherobj.width);
+        var othertop = otherobj.y;
+        var otherbottom = otherobj.y + (otherobj.height);
+        var crash = true;
+
+
+
+      //  if(onPlatform && !(between(Math.floor(mybottom),othertop-2,othertop+2) && ((myright >= otherleft && myright <= otherright) || (myleft >= otherleft && myleft <= otherright))  )){
+
+        //}
+		if( ((mybottom < othertop) && (mytop < othertop) ) || (myright < otherleft) || (myleft > otherright) ) {
+			if(between(Math.floor(mybottom),othertop-2,othertop+2) && !((myright >= otherleft && myright <= otherright) || (myleft >= otherleft && myleft <= otherright))){
+				this.noLongerOnPlatform();
+				return false;
+			}
+            crash = false;
+            //this.noLongerOnPlatform();
+            console.log(onPlatform);
+            //console.log("Not touching shit");
+            //onPlatform = false;
+           // onPlatform();
+       // }else if( onPlatform && between(Math.floor(mybottom),othertop-2,othertop+2) ){
+        	//this.onPlatform();
+        	crash = false;
+        }else if( between(Math.floor(mybottom),othertop-2,othertop+2) && ((myright >= otherleft && myright <= otherright) || (myleft >= otherleft && myleft <= otherright))  ){
+        	//console.log("My ass is on fire");
+        	console.log(onPlatform);
+        	if(onPlatform == false && forcePlatformFalse == false){
+        		this.onPlatform();        		
+        	}
+        	crash = false;
+        }else{
+        	//console.log("My bottom is at " + Math.floor(mybottom));
+        	//console.log("The other top is at " + othertop);
+        	//console.log("The between value is " + between(Math.floor(mybottom),othertop-2,othertop+2));
+        	onPlatform = false;
+        	crash = true;
+        }
+
+        return crash;
+    }
+}
+
+function updateGameArea() {
+    var x, height, gap, minHeight, maxHeight, minGap, maxGap;
+    for (i = 0; i < myObstacles.length; i += 1) {
+        if (myGamePiece.crashWith(myObstacles[i])) {
+            return;
+        }
+    }
+    myGameArea.clear();
+    myGameArea.frameNo += 1;
+    if (myGameArea.frameNo == 1 || everyinterval(150)) {
+        x = myGameArea.canvas.width;
+        minHeight = 20;
+        maxHeight = 200;
+        height = Math.floor(Math.random()*(maxHeight-minHeight+1)+minHeight);
+        minGap = 50;
+        maxGap = 200;
+        gap = Math.floor(Math.random()*(maxGap-minGap+1)+minGap);
+      //  myObstacles.push(new component(10, height, "green", x, 0));
+        myObstacles.push(new component(250, x - height - gap, "green", x, height + gap));
+    }
+    for (i = 0; i < myObstacles.length; i += 1) {
+        myObstacles[i].x += -1;
+        myObstacles[i].update();
+    }
+    myScore.text="SCORE: " + myGameArea.frameNo;
+    myScore.update();
+    myGamePiece.newPos();
+    myGamePiece.update();
+}
+
+function everyinterval(n) {
+    if ((myGameArea.frameNo / n) % 1 == 0) {return true;}
+    return false;
+}
+
+function accelerate(n) {
+	onPlatform = false;
+	forcePlatformFalse = true;
+    myGamePiece.gravity = n;
+}
+function accelerate1(n) {
+	forcePlatformFalse = false;
+	onPlatform = false;
+   	myGamePiece.gravity = n;		
 
 }
- 
-function draw() {
-	ctx.drawImage(background,0,0);
-	ctx.drawImage(cloud, cloud_x, 0);
-}
- 
-function main_loop() {
-	draw();
-	update();
-}
- 
-init();
-
-
-
 
 </script>
-
-<p>We have created a game area! (or at least an empty canvas)</p>
-
+<br>
+<button onmousedown="accelerate(-2)" onmouseup="accelerate1(2)">ACCELERATE</button>
+<p>Use the ACCELERATE button to stay in the air</p>
+<p>How long can you stay alive?</p>
 </body>
 </html>
