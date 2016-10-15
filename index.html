@@ -2,76 +2,20 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<link rel="stylesheet" type="text/css" href="mainSprite.css">
 <style>
 canvas {
     border: 5px solid black;
-    background-color: pink;
+    /*background-color: pink;*/
+    background:  url(http://i.giphy.com/9MLm4mXFfovfi.gif)
 }
 </style>
 </head>
 <body>
-<canvas id="cloud_demo_canvas" width="1440" height="900">Alternative text if browser don't support canvas.</canvas>
+<canvas id="cloud_demo_canvas" width="1000" height="800">Alternative text if browser don't support canvas.</canvas>
 
+<script src = "startMenu.js"></script>
 
-<script>
-
-// <---------- EXTRA CANVAS POWER -----------> //
-var canvas;
-var ctx;
- 
-var background;
-var width = 900;	
-var height = 1440;
- 
-var cloud;
-var cloud_x;
-
-
- 
-function init() {
-	canvas = document.getElementById("cloud_demo_canvas");
-	width = canvas.width;
-	height = canvas.height;
-	ctx = canvas.getContext("2d");
- 
-	// init background 
-	background = new Image();
-	background.src = 'http://www.hutui6.com/data/out/22/68383528-blind-wallpapers.jpg';
-
- 
-	// init cloud
-	cloud = new Image();
-	cloud.src = 'http://silveiraneto.net/wp-content/uploads/2011/06/cloud.png';
-	cloud.onload = function(){
-		cloud_x = width;
-	};
- 
-	return setInterval(main_loop, 0.1);
-}
-function update(){
-	cloud_x -= 0.3;
-	if (cloud_x < -cloud.width ) {
-		cloud_x = width;
-	}
-
-}
- 
-function draw() {
-	ctx.drawImage(background,0,0);
-	ctx.drawImage(cloud, cloud_x, 0);
-}
- 
-function main_loop() {
-	draw();
-	update();
-}
- 
-init();
-
-
-
-
-</script>
 
 <p>We have created a game area! (or at least an empty canvas)</p>
 
