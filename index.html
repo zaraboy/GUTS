@@ -2,12 +2,16 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<link rel="stylesheet" type="text/css" href="mainSprite.css">
 <style>
 canvas {
     border:1px solid #d3d3d3;
-    background-color: #f1f1f1;
+    /*background-color: #f1f1f1;*/
+    background:  url(http://i.giphy.com/9MLm4mXFfovfi.gif)
 }
 </style>
+<script src = "startMenu.js"></script>
+<script src = "terrainGen.js"></script>
 </head>
 <body onload="startGame()">
 <script>
@@ -32,8 +36,8 @@ function startGame() {
 var myGameArea = {
     canvas : document.createElement("canvas"),
     start : function() {
-        this.canvas.width = 480;
-        this.canvas.height = 270;
+        this.canvas.width = 1000;
+        this.canvas.height = 800;
         this.context = this.canvas.getContext("2d");
         document.body.insertBefore(this.canvas, document.body.childNodes[0]);
         this.frameNo = 0;
@@ -207,5 +211,7 @@ function accelerate1(n) {
 <button onmousedown="accelerate(-2)" onmouseup="accelerate1(2)">ACCELERATE</button>
 <p>Use the ACCELERATE button to stay in the air</p>
 <p>How long can you stay alive?</p>
+
+
 </body>
 </html>
