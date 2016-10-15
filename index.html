@@ -2,16 +2,12 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<link rel="stylesheet" type="text/css" href="mainSprite.css">
 <style>
-/*#cloud_demo_canvas {
-    border: 5px solid black;
-    /*background-color: pink;*/
-    background:  url(http://i.giphy.com/9MLm4mXFfovfi.gif)
-}*/
+canvas {
+    border:1px solid #d3d3d3;
+    background-color: #f1f1f1;
+}
 </style>
-
-<script src = "terrainGen.js"></script>
 </head>
 <body onload="startGame()">
 <script>
@@ -23,7 +19,7 @@ var onPlatform = false;
 var forcePlatformFalse = false;
 
 function between(a,min,max){
-	return ((a >= min) && (a <= max));
+    return ((a >= min) && (a <= max));
 }
 
 function startGame() {
@@ -74,21 +70,21 @@ function component(width, height, color, x, y, type) {
         }
     }
     this.newPos = function() {
-    	if(onPlatform == false && forcePlatformFalse == false && this.gravity == 0){
-    		this.gravity = 2;
-    	}
-    	console.log("Gravity is: " + myGamePiece.gravity);
+        if(onPlatform == false && forcePlatformFalse == false && this.gravity == 0){
+            this.gravity = 2;
+        }
+        console.log("Gravity is: " + myGamePiece.gravity);
         this.gravitySpeed = this.gravity;
         this.x += this.speedX;
         this.y += this.speedY + this.gravitySpeed;
         this.hitBottom();
     }
     this.onPlatform = function() {
-    	console.log(onPlatform);
-    	onPlatform = true;
-       	//this.gravitySpeed = 0;
-       	this.gravity = 0;
-       	//this.gravity = 0.01;
+        console.log(onPlatform);
+        onPlatform = true;
+        //this.gravitySpeed = 0;
+        this.gravity = 0;
+        //this.gravity = 0.01;
         this.x += this.speedX;
         //onPlatform = false;
         //this.hitBottom();
@@ -98,8 +94,8 @@ function component(width, height, color, x, y, type) {
 
     }
     this.noLongerOnPlatform = function(){
-    	onPlatform = false;
-    	this.gravitySpeed = 2;
+        onPlatform = false;
+        this.gravitySpeed = 2;
     }
     this.hitBottom = function() {
         var rockbottom = myGameArea.canvas.height - this.height;
@@ -126,11 +122,11 @@ function component(width, height, color, x, y, type) {
       //  if(onPlatform && !(between(Math.floor(mybottom),othertop-2,othertop+2) && ((myright >= otherleft && myright <= otherright) || (myleft >= otherleft && myleft <= otherright))  )){
 
         //}
-		if( ((mybottom < othertop) && (mytop < othertop) ) || (myright < otherleft) || (myleft > otherright) ) {
-			if(between(Math.floor(mybottom),othertop-2,othertop+2) && !((myright >= otherleft && myright <= otherright) || (myleft >= otherleft && myleft <= otherright))){
-				this.noLongerOnPlatform();
-				return false;
-			}
+        if( ((mybottom < othertop) && (mytop < othertop) ) || (myright < otherleft) || (myleft > otherright) ) {
+            if(between(Math.floor(mybottom),othertop-2,othertop+2) && !((myright >= otherleft && myright <= otherright) || (myleft >= otherleft && myleft <= otherright))){
+                this.noLongerOnPlatform();
+                return false;
+            }
             crash = false;
             //this.noLongerOnPlatform();
             console.log(onPlatform);
@@ -138,21 +134,21 @@ function component(width, height, color, x, y, type) {
             //onPlatform = false;
            // onPlatform();
        // }else if( onPlatform && between(Math.floor(mybottom),othertop-2,othertop+2) ){
-        	//this.onPlatform();
-        	crash = false;
+            //this.onPlatform();
+            crash = false;
         }else if( between(Math.floor(mybottom),othertop-2,othertop+2) && ((myright >= otherleft && myright <= otherright) || (myleft >= otherleft && myleft <= otherright))  ){
-        	//console.log("My ass is on fire");
-        	console.log(onPlatform);
-        	if(onPlatform == false && forcePlatformFalse == false){
-        		this.onPlatform();
-        	}
-        	crash = false;
+            //console.log("My ass is on fire");
+            console.log(onPlatform);
+            if(onPlatform == false && forcePlatformFalse == false){
+                this.onPlatform();              
+            }
+            crash = false;
         }else{
-        	//console.log("My bottom is at " + Math.floor(mybottom));
-        	//console.log("The other top is at " + othertop);
-        	//console.log("The between value is " + between(Math.floor(mybottom),othertop-2,othertop+2));
-        	onPlatform = false;
-        	crash = true;
+            //console.log("My bottom is at " + Math.floor(mybottom));
+            //console.log("The other top is at " + othertop);
+            //console.log("The between value is " + between(Math.floor(mybottom),othertop-2,othertop+2));
+            onPlatform = false;
+            crash = true;
         }
 
         return crash;
@@ -195,14 +191,14 @@ function everyinterval(n) {
 }
 
 function accelerate(n) {
-	onPlatform = false;
-	forcePlatformFalse = true;
+    onPlatform = false;
+    forcePlatformFalse = true;
     myGamePiece.gravity = n;
 }
 function accelerate1(n) {
-	forcePlatformFalse = false;
-	onPlatform = false;
-   	myGamePiece.gravity = n;
+    forcePlatformFalse = false;
+    onPlatform = false;
+    myGamePiece.gravity = n;        
 
 }
 
@@ -211,6 +207,5 @@ function accelerate1(n) {
 <button onmousedown="accelerate(-2)" onmouseup="accelerate1(2)">ACCELERATE</button>
 <p>Use the ACCELERATE button to stay in the air</p>
 <p>How long can you stay alive?</p>
-
 </body>
 </html>
