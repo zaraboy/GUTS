@@ -17,6 +17,11 @@
 
 <script>
 
+var jump_distance = 150;
+var jump_start = -1;
+
+var initialBlock;
+
 var myGamePiece;
 var myObstacles = [];
 var myScore;
@@ -24,7 +29,95 @@ var onPlatform = false;
 var forcePlatformFalse = false;
 var firstTime = true;
 
+var troll = [];
+var trump = [];
+var kappa = [];
+var pepe = [];
+var doge = [];
+var zdravko = [];
+var iluminati = [];
+var pikutaro = [];
 
+var zdravkoRun = new Image();
+var zdravkoNoRun = new Image();
+zdravkoRun.src = 'zdravkoRun.png';
+zdravkoNoRun.src = 'zdravkoNoRun.png';
+
+var iluminatiRun = new Image();
+var iluminatiNoRun = new Image();
+iluminatiRun.src = 'iluminatiRun.png';
+iluminatiNoRun.src = 'iluminatiNoRun.png';
+
+iluminati.push(iluminatiRun);
+iluminati.push(iluminatiNoRun);
+
+var kappaRun = new Image();
+var kappaNoRun = new Image();
+kappaRun.src = 'kappaRun.png';
+kappaNoRun.src = 'kappaNoRun.png';
+
+kappa.push(kappaRun);
+kappa.push(kappaNoRun);
+
+var dogeRun = new Image();
+var dogeNoRun = new Image();
+dogeRun.src = 'dogeRun.png';
+dogeNoRun.src = 'dogeNoRun.png';
+
+doge.push(dogeRun);
+doge.push(dogeNoRun);
+
+var trumpRun = new Image();
+var trumpNoRun = new Image();
+trumpRun.src = 'trumpRun.png';
+trumpNoRun.src = 'trumpNoRun.png';
+
+trump.push(trumpRun);
+trump.push(trumpNoRun);
+
+var pikutaroRun = new Image();
+var pikutaroNoRun = new Image();
+pikutaroRun.src = 'pikutaroRun.png';
+pikutaroNoRun.src = 'pikutaroNoRun.png';
+
+pikutaro.push(pikutaroRun);
+pikutaro.push(pikutaroNoRun);
+
+zdravko.push(zdravkoRun);
+zdravko.push(zdravkoNoRun);
+
+var head = [];
+//head.push(troll);
+head.push(trump);
+head.push(pikutaro);
+head.push(kappa);
+//head.push(pepe);
+head.push(zdravko);
+head.push(doge);
+head.push(iluminati);
+
+var music = [];
+
+var trump = new Audio('trump.mp3');
+var pikutaro = new Audio('pikotaro.mp3');
+var kappa = new Audio('kappa.mp3');
+var zdravko = new Audio('zdravko.mp3');
+var doge = new Audio('doge.mp3');
+var iluminati = new Audio('illuminati.mp3');
+
+music.push(trump);
+music.push(pikutaro);
+music.push(kappa);
+music.push(zdravko);
+music.push(doge);
+music.push(iluminati);
+
+var headChoice = Math.floor(Math.random() * 6);
+music[headChoice].play();
+//music[headChoice].pause();
+//headChoice = 4;
+
+console.log(head[4]);
 
 
 
@@ -37,10 +130,13 @@ function between(a,min,max){
 }
 
 function startGame() {
-    myGamePiece = new component(50, 100, "red", 10, 120,"hero");
-    myGamePiece.gravity = 0.05;
+    document.getElementById("jump").focus();
+    myGamePiece = new component(50, 121, "red", 10, 10,"hero");
+    myGamePiece.gravity = 2;
     myScore = new component("30px", "Consolas", "black", 280, 40, "text");
+    initialBlock = new component(800, 500, "red", 0, 220,"bla");
     myGameArea.start();
+
 }
 
 var myGameArea = {
@@ -170,12 +266,14 @@ function component(width, height, color, x, y, type) {
             if(counter == 10){
                 running = !running;
                 if(running){
-                    pic = run;
+                    pic = head[headChoice][0];
                 } else{
-                    pic = norun;
+                    pic = head[headChoice][1];
                 }
                 counter = 0;
             }
+            //ctx.drawImage(head[headChoice], this.x, this.y, 30, 30);
+
             ctx.drawImage(pic,this.x, this.y);
             counter ++;
             //ctx.drawImage(run,this.x, this.y);
@@ -269,6 +367,7 @@ function component(width, height, color, x, y, type) {
             //console.log("The other top is at " + othertop);
             //console.log("The between value is " + between(Math.floor(mybottom),othertop-2,othertop+2));
             onPlatform = false;
+            music[headChoice].pause();
             crash = true;
         }
 
@@ -282,11 +381,12 @@ function updateGameArea() {
     for (i = 0; i < myObstacles.length; i += 1) {
         if (myGamePiece.crashWith(myObstacles[i])) {
             return;
+            
         }
     }
     myGameArea.clear();
     myGameArea.frameNo += 1;
-    if (myGameArea.frameNo == 1 || everyinterval(500)) {
+    if (myGameArea.frameNo == 1 || everyinterval(350)) {
         x = myGameArea.canvas.width;
 
         minHeight = 20;
@@ -297,12 +397,14 @@ function updateGameArea() {
         gap = Math.floor(Math.random()*(maxGap-minGap+1)+minGap);
       //  myObstacles.push(new component(10, height, "green", x, 0));
         if(firstTime){
+
           neshtosi = genFirstBlock();
           firstBlockHeight = neshtosi.shift();
           firstBlockLength = neshtosi.shift();
           previousBlockHeight = firstBlockHeight;
           previousBlockLength = firstBlockLength;
           blockLength = firstBlockLength;
+          myObstacles.push(initialBlock);
           myObstacles.push(new component(firstBlockLength, firstBlockHeight, "green", x, height + gap));
           firstTime = false;
       //  console.log(blockHeight+"---"+blockLength);
@@ -333,10 +435,26 @@ function everyinterval(n) {
     return false;
 }
 
-function accelerate(n) {
+/*function accelerate(n) {
     onPlatform = false;
     forcePlatformFalse = true;
     myGamePiece.gravity = n;
+}*/
+function accelerate(n) {
+    if(jump_start == -1 && myGamePiece.y > 0) {
+        jump_start = 1;
+        console.log("Jump start is at: " + myGamePiece.y);
+        onPlatform = false;
+        forcePlatformFalse = true;
+        myGamePiece.gravity = n;
+        setTimeout(function(){
+            console.log("Gravity is set to: " + myGamePiece.gravity);
+            myGamePiece.gravity = 2;
+            jump_start = -1; 
+        },1000); 
+                
+        console.log("Jump ended, gravity set to" + myGamePiece.gravity);
+    }
 }
 function accelerate1(n) {
     forcePlatformFalse = false;
@@ -345,9 +463,11 @@ function accelerate1(n) {
 
 }
 
+
+
 </script>
 <br>
-<button onmousedown="accelerate(-2)" onmouseup="accelerate1(2)">ACCELERATE</button>
+<button id="jump" onkeydown="accelerate(-2)" onkeyup="accelerate1(2)">ACCELERATE</button>
 <p>Use the ACCELERATE button to stay in the air</p>
 <p>How long can you stay alive?</p>
 
