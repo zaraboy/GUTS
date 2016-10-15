@@ -16,19 +16,16 @@ function init() {
 	width = canvas.width;
 	height = canvas.height;
 	ctx = canvas.getContext("2d");
-
 	// init background
 	background = new Image();
-	// background.src = 'main.png';
-
 
 	// init cloud
 	startButton = new Image();
   title = new Image();
-  title.src = 'title.png'
+  title.src = 'Title.png'
 	startButton.src = 'button.png';
   label = new Image();
-  label.src = 'label.png'
+  label.src = 'Label.png'
 	testplat = new Image();
 	testplat.src = 'block5.png'
 	startButton.onload = function(){
@@ -36,10 +33,9 @@ function init() {
     buttonHeight = height/2;
 	};
   document.getElementById("cloud_demo_canvas").onclick = function () {
-      location.href = "http://www.google.com";
+      location.href = "index.html";
       console.log("ejfbsejgfsd");
     };
-
 
 	return setInterval(main_loop, 0.1);
 }
