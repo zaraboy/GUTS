@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<link rel="stylesheet" type="text/css" href="mainSprite.css">
+
 <style>
 /*#cloud_demo_canvas {
     border: 5px solid black;
@@ -11,9 +11,10 @@
 }*/
 </style>
 
-<script src = "terrainGen.js"></script>
+
 </head>
 <body onload="startGame()">
+<img id="coin" src="coin.png"/>
 <script>
 
 var myGamePiece;
@@ -22,12 +23,20 @@ var myScore;
 var onPlatform = false;
 var forcePlatformFalse = false;
 
+
+
+
+
+
+
+
+
 function between(a,min,max){
 	return ((a >= min) && (a <= max));
 }
 
 function startGame() {
-    myGamePiece = new component(30, 30, "red", 10, 120);
+    myGamePiece = new component(50, 100, "red", 10, 120,"hero");
     myGamePiece.gravity = 0.05;
     myScore = new component("30px", "Consolas", "black", 280, 40, "text");
     myGameArea.start();
@@ -50,6 +59,75 @@ var myGameArea = {
 
 
 
+/*
+function sprite (options) {
+				
+    
+    var that = {},
+        frameIndex = 0,
+        tickCount = 0,
+        ticksPerFrame = ticksPerFrame || 100,
+        numberOfFrames = options.numberOfFrames || 10;
+					
+    that.context = options.context;
+    that.width = options.width;
+    that.height = options.height;
+    that.image = options.image;
+
+    that.render = function () {
+    	// Clear the canvas
+		ctx.clearRect(0, 0, that.width, that.height);
+        // Draw the animation
+        that.context.drawImage(
+           that.image,
+           (frameIndex * that.width) % numberOfFrames,
+           0,
+           that.width / numberOfFrames,
+           that.height,
+           0,
+           0,
+           that.width / numberOfFrames,
+           that.height);
+    
+    };
+
+    that.loop = options.loop;
+
+    that.update = function () {
+
+        tickCount += 1;
+			
+        if (tickCount > ticksPerFrame) {
+        
+        	tickCount = 0;
+        	
+            // If the current frame index is in range
+            if (frameIndex < numberOfFrames - 1) {	
+                // Go to the next frame
+                frameIndex += 1;
+            } else  {
+                frameIndex = 0;
+
+            }
+        }
+    }; 
+
+    return that;
+}
+
+function gameLoop () {
+
+	window.requestAnimationFrame(gameLoop);
+
+	coin.update();
+	coin.render();
+}
+
+*/
+
+var running = false;
+var counter = 0;
+var pic = new Image();
 
 function component(width, height, color, x, y, type) {
     this.type = type;
@@ -68,23 +146,57 @@ function component(width, height, color, x, y, type) {
             ctx.font = this.width + " " + this.height;
             ctx.fillStyle = color;
             ctx.fillText(this.text, this.x, this.y);
-        } else {
+        } else if(this.type == "hero") {
+        	var run = new Image();
+			run.src = "run.png";
+			var norun = new Image();
+			norun.src = "norun.png";
+			
+			/*coinImage.addEventListener("load", gameLoop);
+
+			
+			var canvas = myGameArea.canvas;
+			coin.context= canvas.getContext("2d");
+			coin.width= 46;
+			coin.height= 46;
+			coin.image= coinImage;
+			//
+			*/
+			//coin.render();
+			//
             ctx.fillStyle = color;
-            ctx.fillRect(this.x, this.y, this.width, this.height);
+            if(counter == 10){
+            	running = !running;
+            	if(running){
+            		pic = run;
+            	} else{
+            		pic = norun;
+            	}
+            	counter = 0;
+            }
+            ctx.drawImage(pic,this.x, this.y);
+            counter ++;
+            //ctx.drawImage(run,this.x, this.y);
+            //console.log(myGameArea.frameNo);
+            //ctx.fillRect(this.x, this.y, this.width, this.height);
+        } else {
+        	ctx.fillStyle = color;
+        	ctx.fillRect(this.x, this.y, this.width, this.height);
         }
+
     }
     this.newPos = function() {
     	if(onPlatform == false && forcePlatformFalse == false && this.gravity == 0){
     		this.gravity = 2;
     	}
-    	console.log("Gravity is: " + myGamePiece.gravity);
+    	//console.log("Gravity is: " + myGamePiece.gravity);
         this.gravitySpeed = this.gravity;
         this.x += this.speedX;
         this.y += this.speedY + this.gravitySpeed;
         this.hitBottom();
     }
     this.onPlatform = function() {
-    	console.log(onPlatform);
+    	//console.log(onPlatform);
     	onPlatform = true;
        	//this.gravitySpeed = 0;
        	this.gravity = 0;
@@ -126,11 +238,11 @@ function component(width, height, color, x, y, type) {
       //  if(onPlatform && !(between(Math.floor(mybottom),othertop-2,othertop+2) && ((myright >= otherleft && myright <= otherright) || (myleft >= otherleft && myleft <= otherright))  )){
 
         //}
-		if( ((mybottom < othertop) && (mytop < othertop) ) || (myright < otherleft) || (myleft > otherright) ) {
-			if(between(Math.floor(mybottom),othertop-2,othertop+2) && !((myright >= otherleft && myright <= otherright) || (myleft >= otherleft && myleft <= otherright))){
-				this.noLongerOnPlatform();
-				return false;
-			}
+        if( ((mybottom < othertop) && (mytop < othertop) ) || (myright < otherleft) || (myleft > otherright) ) {
+            if(between(Math.floor(mybottom),othertop-2,othertop+2) && !((myright >= otherleft && myright <= otherright) || (myleft >= otherleft && myleft <= otherright))){
+                this.noLongerOnPlatform();
+                return false;
+            }
             crash = false;
             //this.noLongerOnPlatform();
             console.log(onPlatform);
@@ -138,26 +250,27 @@ function component(width, height, color, x, y, type) {
             //onPlatform = false;
            // onPlatform();
        // }else if( onPlatform && between(Math.floor(mybottom),othertop-2,othertop+2) ){
-        	//this.onPlatform();
-        	crash = false;
+            //this.onPlatform();
+            crash = false;
         }else if( between(Math.floor(mybottom),othertop-2,othertop+2) && ((myright >= otherleft && myright <= otherright) || (myleft >= otherleft && myleft <= otherright))  ){
-        	//console.log("My ass is on fire");
-        	console.log(onPlatform);
-        	if(onPlatform == false && forcePlatformFalse == false){
-        		this.onPlatform();
-        	}
-        	crash = false;
+            //console.log("My ass is on fire");
+            console.log(onPlatform);
+            if(onPlatform == false && forcePlatformFalse == false){
+                this.onPlatform();              
+            }
+            crash = false;
         }else{
-        	//console.log("My bottom is at " + Math.floor(mybottom));
-        	//console.log("The other top is at " + othertop);
-        	//console.log("The between value is " + between(Math.floor(mybottom),othertop-2,othertop+2));
-        	onPlatform = false;
-        	crash = true;
+            //console.log("My bottom is at " + Math.floor(mybottom));
+            //console.log("The other top is at " + othertop);
+            //console.log("The between value is " + between(Math.floor(mybottom),othertop-2,othertop+2));
+            onPlatform = false;
+            crash = true;
         }
 
         return crash;
     }
 }
+
 
 function updateGameArea() {
     var x, height, gap, minHeight, maxHeight, minGap, maxGap;
