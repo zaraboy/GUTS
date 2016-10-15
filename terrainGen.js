@@ -30,10 +30,10 @@ function genNextBlock(cur_height,cur_length){
 }
 
 genFirstBlock();
-
+console.log(queue);
 for(var i  = 0; i < 5; i++){
     genNextBlock(cur_height,cur_length);
-    //console.log(cur_height,' ',cur_length);
+    //  console.log(cur_height,' ',cur_length);
 
 }
 
@@ -59,7 +59,7 @@ function init() {
     terrainBlock.src = "block5.png";
 
 
-	return setInterval(main_loop, 0.1);
+	return setInterval(main_loop, 10);
 }
 
 
@@ -67,7 +67,7 @@ function init() {
 function drawTerrain() {
 	//ctx.drawImage(background,0,0);
     //if(queue.)
-    console.log(queue, ' PREDI ');
+    //console.log(queue, ' PREDI ');
 
     var ycoord=queue.shift();
     var xlength=queue.shift();
@@ -83,7 +83,7 @@ function drawTerrain() {
 }
 
 function main_loop() {
-    //console.log(cur_height,' ',cur_length);
+    console.log(cur_height,' ',cur_length);
 
 	drawTerrain();
 }
