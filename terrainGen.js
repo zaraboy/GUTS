@@ -5,8 +5,11 @@ const max_length = 400;
 
 var cur_height, cur_length;
 var queue=[];
+var drawQueue = [];
 var max_jump = 200;
 var xcoord=0;
+var ycoord;
+var xlength;
 
 function genFirstBlock(){
     //generate first lock with a number between 600 and 50
@@ -20,6 +23,7 @@ function genFirstBlock(){
 
 function genNextBlock(cur_height,cur_length){
     //console.log(cur_height,' ',cur_length);
+    console.log("KURA NA HEIGHTA E : ", cur_height);
     var temp = Math.max((cur_height-200),200);
     cur_height = Math.floor((Math.random()*(750-temp)) + temp);
     queue.push(cur_height);
@@ -32,7 +36,11 @@ function genNextBlock(cur_height,cur_length){
 genFirstBlock();
 console.log(queue);
 for(var i  = 0; i < 5; i++){
-    genNextBlock(cur_height,cur_length);
+    ycoord = queue.shift();
+    xlength = queue.shift();
+    drawQueue.push(ycoord);
+    drawQueue.push(xlength);
+    genNextBlock(ycoord,xlength);
     //  console.log(cur_height,' ',cur_length);
 
 }
@@ -59,7 +67,7 @@ function init() {
     terrainBlock.src = "block5.png";
 
 
-	return setInterval(main_loop, 10);
+	return setInterval(main_loop, 30);
 }
 
 
@@ -69,12 +77,14 @@ function drawTerrain() {
     //if(queue.)
     //console.log(queue, ' PREDI ');
 
-    var ycoord=queue.shift();
-    var xlength=queue.shift();
-    console.log(queue, ' QUEUE');
-    ctx.drawImage(terrainBlock,xcoord,ycoord,xlength,50);
-    console.log(ycoord, " y COORD");
-    console.log(xcoord, " x coord");
+    // var ycoord=queue.shift();
+    // var xlength=queue.shift();
+    var yc = drawQueue.shift();
+    var xl = drawQueue.shift();
+    // console.log(queue, ' QUEUE');
+    ctx.drawImage(terrainBlock,xcoord,yc,xlength,50);
+    // console.log(ycoord, " y COORD");
+    // console.log(xcoord, " x coord");
     //ctx.drawImage(terrainBlock,xcoord,ycoord,xlength,50);
     xcoord =xcoord + xlength;
     //ctx.drawImage(terrainBlock,0,576,300,50);
@@ -83,7 +93,7 @@ function drawTerrain() {
 }
 
 function main_loop() {
-    console.log(cur_height,' ',cur_length);
+    // console.log(cur_height,' ',cur_length);
 
 	drawTerrain();
 }
