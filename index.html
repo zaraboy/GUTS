@@ -149,9 +149,9 @@ function component(width, height, color, x, y, type) {
             ctx.fillText(this.text, this.x, this.y);
         } else if(this.type == "hero") {
             var run = new Image();
-            //run.src = "run.png";
+            run.src = "run.png";
             var norun = new Image();
-            //norun.src = "norun.png";
+            norun.src = "norun.png";
 
             /*coinImage.addEventListener("load", gameLoop);
 
@@ -176,11 +176,11 @@ function component(width, height, color, x, y, type) {
                 }
                 counter = 0;
             }
-            //ctx.drawImage(pic,this.x, this.y);
+            ctx.drawImage(pic,this.x, this.y);
             counter ++;
             //ctx.drawImage(run,this.x, this.y);
             //console.log(myGameArea.frameNo);
-            ctx.fillRect(this.x, this.y, this.width, this.height);
+            //ctx.fillRect(this.x, this.y, this.width, this.height);
         } else {
             var block = new Image();
             block.src = "block5.png";
