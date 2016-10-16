@@ -4,11 +4,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <script src="terrainGen.js"></script>
 <style>
-/*#cloud_demo_canvas {
+
+canvas {
     border: 5px solid black;
     /*background-color: pink;*/
-    background:  url(http://i.giphy.com/9MLm4mXFfovfi.gif)
-}*/
+    background-image:  url("background.png");
+}
 </style>
 
 
@@ -368,18 +369,26 @@ function component(width, height, color, x, y, type) {
             //console.log("The between value is " + between(Math.floor(mybottom),othertop-2,othertop+2));
             onPlatform = false;
             music[headChoice].pause();
+            anotherOne = new Audio('anotherOne.mp3');
+            //anotherOne.play();
             crash = true;
+            clearInterval(myGameArea.interval);
         }
 
         return crash;
     }
 }
 
+function playAnother(){
+    console.log('dada');
+    anotherOne.play();
+}
 
 function updateGameArea() {
     var x, height, gap, minHeight, maxHeight, minGap, maxGap, blockLength;
     for (i = 0; i < myObstacles.length; i += 1) {
         if (myGamePiece.crashWith(myObstacles[i])) {
+            playAnother();
             return;
             
         }
@@ -421,7 +430,7 @@ function updateGameArea() {
         //myObstacles.push(new component(250, x - height - gap, "green", x, height + gap));
     }
     for (i = 0; i < myObstacles.length; i += 1) {
-        myObstacles[i].x += -1;
+        myObstacles[i].x += -1.5;
         myObstacles[i].update();
     }
     myScore.text="SCORE: " + myGameArea.frameNo;
@@ -435,12 +444,8 @@ function everyinterval(n) {
     return false;
 }
 
+
 /*function accelerate(n) {
-    onPlatform = false;
-    forcePlatformFalse = true;
-    myGamePiece.gravity = n;
-}*/
-function accelerate(n) {
     if(jump_start == -1 && myGamePiece.y > 0) {
         jump_start = 1;
         console.log("Jump start is at: " + myGamePiece.y);
@@ -455,19 +460,49 @@ function accelerate(n) {
                 
         console.log("Jump ended, gravity set to" + myGamePiece.gravity);
     }
+}*/
+var someshit = false;
+
+function what2(n){
+    accelerate1(n);
+    someshit = false;
 }
+
 function accelerate1(n) {
     forcePlatformFalse = false;
     onPlatform = false;
     myGamePiece.gravity = n;
+    //clearInterval(timer);
 
 }
+ var timer;
+ var t0 = 0;
+function accelerate(n,event) {
+    
+    onPlatform = false;
+    forcePlatformFalse = true;
+    myGamePiece.gravity = n; 
+    if(performance.now() - t0 > 0.01){
+        someshit = true;
+        accelerate1(2);
+        console.log(performance.now() - t0);
+    }
+    
+    
+}
 
-
+function what(n,event){
+    if(someshit){
+        return false;
+    }
+    t0 = performance.now();
+    accelerate(n,event);
+    //timer = setInterval(accelerate(n,event), 100);
+}
 
 </script>
 <br>
-<button id="jump" onkeydown="accelerate(-2)" onkeyup="accelerate1(2)">ACCELERATE</button>
+<button id="jump" onkeydown="what(-2, event)" onkeyup="what2(2)">ACCELERATE</button>
 <p>Use the ACCELERATE button to stay in the air</p>
 <p>How long can you stay alive?</p>
 
