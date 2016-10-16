@@ -34,7 +34,7 @@ function init() {
 	};
   document.getElementById("cloud_demo_canvas").onclick = function () {
       location.href = "index.html";
-      console.log("ejfbsejgfsd");
+      //console.log("ejfbsejgfsd");
     };
 
 	return setInterval(main_loop, 0.1);

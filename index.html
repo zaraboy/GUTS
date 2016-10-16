@@ -3,6 +3,9 @@
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <script src="terrainGen.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
 <style>
 
 canvas {
@@ -15,7 +18,7 @@ canvas {
 
 </head>
 <body onload="startGame()">
-
+<div id="refresh"></div>
 <script>
 
 var jump_distance = 150;
@@ -46,8 +49,8 @@ zdravkoNoRun.src = 'zdravkoNoRun.png';
 
 var iluminatiRun = new Image();
 var iluminatiNoRun = new Image();
-iluminatiRun.src = 'iluminatiRun.png';
-iluminatiNoRun.src = 'iluminatiNoRun.png';
+iluminatiRun.src = 'illuminatiRun.png';
+iluminatiNoRun.src = 'illuminatiNoRun.png';
 
 iluminati.push(iluminatiRun);
 iluminati.push(iluminatiNoRun);
@@ -143,7 +146,7 @@ function startGame() {
 var myGameArea = {
     canvas : document.createElement("canvas"),
     start : function() {
-        this.canvas.width = 1000;
+        this.canvas.width = 1050;
         this.canvas.height = 800;
         this.context = this.canvas.getContext("2d");
         document.body.insertBefore(this.canvas, document.body.childNodes[0]);
@@ -370,6 +373,7 @@ function component(width, height, color, x, y, type) {
             onPlatform = false;
             music[headChoice].pause();
             anotherOne = new Audio('anotherOne.mp3');
+            sadViolin = new Audio('sadViolin.mp3');
             //anotherOne.play();
             crash = true;
             clearInterval(myGameArea.interval);
@@ -379,9 +383,27 @@ function component(width, height, color, x, y, type) {
     }
 }
 
+$( document ).ready(function() {
+    $('body').on('click', '#refresh', function(){
+        //sadViolin.pause();
+       // anotherOne.play();
+        location.reload();
+    });
+    $('body').on('click', '#pause', function(){
+        $('canvas').css('background-image','url(onedoes.jpg)');
+        $('canvas').css('background-repeat','no-repeat');
+        $('canvas').css('background-size','cover');
+        $('#jump').focus();
+    });
+});
+
 function playAnother(){
-    console.log('dada');
-    anotherOne.play();
+    //console.log('dada');
+    //anotherOne.play();
+    sadViolin.play();
+    $('canvas').hide();
+    $('#refresh').html('<img src="anotherOne.jpg"/>');
+
 }
 
 function updateGameArea() {
@@ -503,6 +525,7 @@ function what(n,event){
 </script>
 <br>
 <button id="jump" onkeydown="what(-2, event)" onkeyup="what2(2)">ACCELERATE</button>
+<button id="pause">PAUSE</button>
 <p>Use the ACCELERATE button to stay in the air</p>
 <p>How long can you stay alive?</p>
 
