@@ -147,7 +147,7 @@ var myGameArea = {
     canvas : document.createElement("canvas"),
     start : function() {
         this.canvas.width = 1050;
-        this.canvas.height = 800;
+        this.canvas.height = 500;
         this.context = this.canvas.getContext("2d");
         document.body.insertBefore(this.canvas, document.body.childNodes[0]);
         this.frameNo = 0;
@@ -390,7 +390,7 @@ $( document ).ready(function() {
         location.reload();
     });
     $('body').on('click', '#pause', function(){
-        $('canvas').css('background-image','url(onedoes.jpg)');
+        $('canvas').css('background-image','url(onedoes2.jpg)');
         $('canvas').css('background-repeat','no-repeat');
         $('canvas').css('background-size','cover');
         $('#jump').focus();
@@ -524,7 +524,7 @@ function what(n,event){
 
 </script>
 <br>
-<button id="jump" onkeydown="what(-2, event)" onkeyup="what2(2)">ACCELERATE</button>
+<button id="jump" onkeydown="what(-2, event)" onkeyup="what2(2)"></button>
 <button id="pause">PAUSE</button>
 <p>Use the ACCELERATE button to stay in the air</p>
 <p>How long can you stay alive?</p>

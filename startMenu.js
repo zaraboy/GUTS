@@ -23,7 +23,7 @@ function init() {
 	startButton = new Image();
   title = new Image();
   title.src = 'Title.png'
-	startButton.src = 'button.png';
+	//startButton.src = 'button.png';
   label = new Image();
   label.src = 'Label.png'
 	testplat = new Image();
